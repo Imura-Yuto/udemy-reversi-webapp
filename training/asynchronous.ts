@@ -1,14 +1,17 @@
 import fs from 'fs'
+import util from 'util'
+
+//ファイルを読み取りますよという約束を定義
+const promisifyReadFile = util.promisify(fs.readFile)
 
 function main(){
-    let fileContent: string = 'Not loaded'
+    const readFilePromise = promisifyReadFile('package.json')
 
-    fs.readFile('package.json', (err, data) => {
-        fileContent = data.toString()
+    // readFilePromiseが終わったときの処理を登録
+    readFilePromise.then((data) =>{
+        const fileContent = data.toString()
         console.log(fileContent)
     })
-
-    console.log(fileContent)
 }
 
 main()
